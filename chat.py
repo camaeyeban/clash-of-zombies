@@ -9,7 +9,6 @@ import sys
 import tkinter
 import time
 from tkinter.scrolledtext import ScrolledText
-from tkinter.filedialog import askopenfilename
 
 def main():
     print("Starting Chatroom")
@@ -35,8 +34,8 @@ class clientUI():
         print("Starting clientUI...")
         self.initDisplay()
 
-        self.ui_messages.insert(tkinter.END, "Adding a message to the text field...\n")
-        self.ui_input.insert(tkinter.END, "<Enter message>")
+        self.ui_messages.insert(tkinter.END, "Welcome to Clash of Zombies! \n")
+        self.ui_input.insert(tkinter.END, "Type your message here")
 
         # This call to mainloop() is blocking and will last for the lifetime
         # of the GUI.
@@ -71,16 +70,11 @@ class clientUI():
             text="Send",
             command=self.sendMsg)
 
-        self.ui_button_file = tkinter.Button(
-            master=self.ui_top,
-            text="File",
-            command=self.sendFile)
 
         # Compute display position for all objects
         self.ui_messages.pack(side=tkinter.TOP, fill=tkinter.BOTH)
         self.ui_input.pack(side=tkinter.TOP, fill=tkinter.BOTH)
         self.ui_button_send.pack(side=tkinter.LEFT)
-        self.ui_button_file.pack(side=tkinter.RIGHT)
 
 
     # SEND button pressed
@@ -98,14 +92,6 @@ class clientUI():
         self.ui_input.delete("0.0", tkinter.END)
 
 
-    # FILE button pressed
-    def sendFile(self):
-        file = askopenfilename()
-
-        if(len(file) > 0 and os.path.isfile(file)):
-            print("UI: Selected file: %s" % file)
-        else:
-            print("UI: File operation canceled")
 
     # Event handler - User closed program via window manager or CTRL-C
     def eventDeleteDisplay(self):
