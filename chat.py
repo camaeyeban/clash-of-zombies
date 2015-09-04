@@ -12,7 +12,7 @@ from tkinter.scrolledtext import ScrolledText
 from tkinter.filedialog import askopenfilename
 
 def main():
-    print("Running GUI Demo")
+    print("Starting Chatroom")
 
     # Instantiate class for UI
     ui = clientUI()
@@ -24,7 +24,7 @@ def main():
         print("Caught CTRL-C, shutting down client")
         ui.eventDeleteDisplay()
     
-    print("GUI Demo exiting")
+    print("Closing Chatroom")
 
 
 class clientUI():
@@ -47,7 +47,7 @@ class clientUI():
 
     def initDisplay(self):
         self.ui_top = tkinter.Tk()
-        self.ui_top.wm_title("GUI Demo")
+        self.ui_top.wm_title("Chatroom")
         self.ui_top.resizable('1','1')
         self.ui_top.protocol("WM_DELETE_WINDOW", self.eventDeleteDisplay)
         
