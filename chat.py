@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
-# Reference: cs-network.serv.pacific.edu
+# Reference: ecs-network.serv.pacific.edu
 # Set script as executable via: chmod +x chat.py
 # Run via:  ./chat.py
 # sudo apt-get install python3-tk
 
+import socket
+import select
 import os
 import sys
 import tkinter
+import _thread
 import time
+from ChatFns import *
 from tkinter.scrolledtext import ScrolledText
 
 def main():
@@ -34,9 +38,42 @@ class clientUI():
         print("Starting clientUI...")
         self.initDisplay()
 
-        self.ui_messages.insert(tkinter.END, "Welcome to Clash of Zombies! \n")
-        self.ui_input.insert(tkinter.END, "Type your message here")
+        if(len(sys.argv) < 3) :
+            print('Usage : python telnet.py hostname port')
+            sys.exit()
+     
+        self.host = sys.argv[1]
+        self.port = int(sys.argv[2])
 
+        self.s = socket(AF_INET, SOCK_STREAM)
+        self.s.settimeout(2)
+
+        self.ui_messages.insert(tkinter.END, "Welcome to Clash of Zombies! \n")
+
+        def ReceiveData():
+            try:
+                self.s.connect((self.host, self.port))
+                LoadConnectionInfo(self.ui_messages, '[ Succesfully connected ]\n---------------------------------------------------------------')
+            except:
+                LoadConnectionInfo(self.ui_messages, '[ Unable to connect ]')
+                return
+            
+            while 1:
+                socket_list = [sys.stdin, self.s]
+                 
+                # Get the list sockets which are readable
+                read_sockets,write, error = select.select(socket_list , [], [])
+                 
+                for sock in read_sockets:
+                    data = sock.recv(4096)
+                    if not data :
+                        LoadConnectionInfo(self.ui_messages, '[ Disconnected from chat server ]')
+                        sys.exit()
+                    else :
+                        #print data
+                        LoadConnectionInfo(self.ui_messages, data)
+
+        _thread.start_new_thread(ReceiveData,())
         # This call to mainloop() is blocking and will last for the lifetime
         # of the GUI.
         self.ui_top.mainloop()
@@ -76,7 +113,6 @@ class clientUI():
         self.ui_input.pack(side=tkinter.TOP, fill=tkinter.BOTH)
         self.ui_button_send.pack(side=tkinter.LEFT)
 
-
     # SEND button pressed
     def sendMsg(self):
         # Get user input (minus newline character at end)
@@ -84,14 +120,15 @@ class clientUI():
 
         print("UI: Got text: '%s'" % msg)
 
+        LoadConnectionInfo(self.ui_messages, bytes(msg, 'UTF-8'))
         # Add this data to the message window
-        self.ui_messages.insert(tkinter.INSERT, "%s\n" % (msg))
-        self.ui_messages.yview(tkinter.END)  # Auto-scrolling
+        #self.ui_messages.insert(tkinter.INSERT, "%s\n" % (msg))
+        #self.ui_messages.yview(tkinter.END)  # Auto-scrolling
         
         # Clean out input field for new data
         self.ui_input.delete("0.0", tkinter.END)
 
-
+        self.s.send(bytes(msg, 'UTF-8'))
 
     # Event handler - User closed program via window manager or CTRL-C
     def eventDeleteDisplay(self):
