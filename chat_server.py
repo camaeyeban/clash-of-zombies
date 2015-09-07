@@ -21,6 +21,7 @@ if __name__ == "__main__":
      
     # List to keep track of socket descriptors
     CONNECTION_LIST = []
+    CLIENT_NAMES = []
     RECV_BUFFER = 4096 # Advisable to keep it as an exponent of 2
     PORT = 5000
      
@@ -56,9 +57,11 @@ if __name__ == "__main__":
                     #In Windows, sometimes when a TCP program closes abruptly,
                     # a "Connection reset by peer" exception will be thrown
                     data = sock.recv(RECV_BUFFER)
+                    ipaddr, port = sock.getpeername()
                     if data:
-                        broadcast_data(sock, "\r" + '<' + str(sock.getpeername()) + '> ' + data)                
-                        print(data)
+                        name, msg = data.split('\02', 1 )
+                        broadcast_data(sock, '<' + name + '> ' + msg)                
+                        print(msg)
                 except:
                     broadcast_data(sock, "Client (%s, %s) is offline" % addr)
                     print("Client (%s, %s) is offline" % addr)

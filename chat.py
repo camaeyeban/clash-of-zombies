@@ -39,24 +39,25 @@ class clientUI():
         self.initDisplay()
 
         if(len(sys.argv) < 3) :
-            print('Usage : python telnet.py hostname port')
+            print('Usage : python chat.py hostname port name')
             sys.exit()
      
         self.host = sys.argv[1]
         self.port = int(sys.argv[2])
+        self.name = str(sys.argv[3])
 
         self.s = socket(AF_INET, SOCK_STREAM)
         self.s.settimeout(2)
+        try:
+            self.s.connect((self.host, self.port))
+            LoadConnectionInfo(self.ui_messages, '[ Succesfully connected ]\n--------------------------------------------')
+        except:
+            LoadConnectionInfo(self.ui_messages, '[ Unable to connect ]')
+            return
 
         self.ui_messages.insert(tkinter.END, "Welcome to Clash of Zombies! \n")
 
         def ReceiveData():
-            try:
-                self.s.connect((self.host, self.port))
-                LoadConnectionInfo(self.ui_messages, '[ Succesfully connected ]\n--------------------------------------------')
-            except:
-                LoadConnectionInfo(self.ui_messages, '[ Unable to connect ]')
-                return
             
             while 1:
                 socket_list = [sys.stdin, self.s]
@@ -125,7 +126,7 @@ class clientUI():
         # Clean out input field for new data
         self.ui_input.delete("0.0", tkinter.END)
 
-        self.s.send(bytes(msg, 'UTF-8'))
+        self.s.send(bytes(self.name + "\02" + msg, 'UTF-8'))
 
     # Event handler - User closed program via window manager or CTRL-C
     def eventDeleteDisplay(self):
