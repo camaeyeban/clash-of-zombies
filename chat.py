@@ -83,8 +83,9 @@ class clientUI():
         print("Stopping clientUI...")
 
     def initDisplay(self):
+    	
         self.ui_top = tkinter.Tk()
-        self.ui_top.wm_title("Chatroom")
+        self.ui_top.wm_title("CLASH OF ZOMBIES")
         self.ui_top.resizable('1','1')
         self.ui_top.protocol("WM_DELETE_WINDOW", self.eventDeleteDisplay)
         
@@ -92,13 +93,21 @@ class clientUI():
             master=self.ui_top,
             wrap=tkinter.WORD,
             width=50,  # In chars
-            height=25)  # In chars     
+            height=34)  # In chars     
 
         self.ui_input = tkinter.Text(
             master=self.ui_top,
             wrap=tkinter.WORD,
             width=50,
             height=4)
+        
+        #GAME BOX    
+        self.ui_gamebox = ScrolledText( 
+        	master=self.ui_top, 
+        	bg="blue", 
+        	width=140,
+        	height=38)
+        
         
         # Bind the button-1 click of the Entry to the handler
         self.ui_input.bind('<Button-1>', self.eventInputClick)
@@ -110,9 +119,13 @@ class clientUI():
 
 
         # Compute display position for all objects
+        self.ui_gamebox.pack(side=tkinter.RIGHT, fill=tkinter.BOTH)
         self.ui_messages.pack(side=tkinter.TOP, fill=tkinter.BOTH)
         self.ui_input.pack(side=tkinter.TOP, fill=tkinter.BOTH)
         self.ui_button_send.pack(side=tkinter.LEFT)
+       
+        
+        
 
     # SEND button pressed
     def sendMsg(self):
