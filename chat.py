@@ -84,7 +84,7 @@ class clientUI():
     def initDisplay(self):
     	
         self.ui_top = tkinter.Tk()
-        self.ui_top.wm_title("Chatroom")
+        self.ui_top.wm_title("CLASH OF ZOMBIES")
         self.ui_top.resizable('1','1')
         self.ui_top.protocol("WM_DELETE_WINDOW", self.eventDeleteDisplay)
         
