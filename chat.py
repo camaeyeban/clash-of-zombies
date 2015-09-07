@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Reference: ecs-network.serv.pacific.edu
 # Set script as executable via: chmod +x chat.py
-# Run via:  ./chat.py
+# Run via:  ./chat.py host port
 # sudo apt-get install python3-tk
 
 import socket
@@ -53,7 +53,7 @@ class clientUI():
         def ReceiveData():
             try:
                 self.s.connect((self.host, self.port))
-                LoadConnectionInfo(self.ui_messages, '[ Succesfully connected ]\n---------------------------------------------------------------')
+                LoadConnectionInfo(self.ui_messages, '[ Succesfully connected ]\n--------------------------------------------')
             except:
                 LoadConnectionInfo(self.ui_messages, '[ Unable to connect ]')
                 return
@@ -71,7 +71,7 @@ class clientUI():
                         sys.exit()
                     else :
                         #print data
-                        LoadConnectionInfo(self.ui_messages, data)
+                        LoadConnectionInfo(self.ui_messages, "utf-8")
 
         _thread.start_new_thread(ReceiveData,())
         # This call to mainloop() is blocking and will last for the lifetime
@@ -118,9 +118,9 @@ class clientUI():
         # Get user input (minus newline character at end)
         msg = self.ui_input.get("0.0", tkinter.END+"-1c")
 
-        print("UI: Got text: '%s'" % msg)
-
-        LoadConnectionInfo(self.ui_messages, bytes(msg, 'UTF-8'))
+        if(msg != ""):
+        	print("UI: Got text: '%s'" % msg)
+        	LoadConnectionInfo(self.ui_messages, "<You> "+msg)
         # Add this data to the message window
         #self.ui_messages.insert(tkinter.INSERT, "%s\n" % (msg))
         #self.ui_messages.yview(tkinter.END)  # Auto-scrolling

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # Tcp Chat server
+# python chat_server.py 5000
  
 import socket
 import select
