@@ -71,7 +71,7 @@ class clientUI():
                         sys.exit()
                     else :
                         #print data
-                        LoadConnectionInfo(self.ui_messages, "utf-8")
+                        LoadConnectionInfo(self.ui_messages, data.decode("utf-8"))
 
         _thread.start_new_thread(ReceiveData,())
         # This call to mainloop() is blocking and will last for the lifetime
@@ -121,9 +121,6 @@ class clientUI():
         if(msg != ""):
         	print("UI: Got text: '%s'" % msg)
         	LoadConnectionInfo(self.ui_messages, "<You> "+msg)
-        # Add this data to the message window
-        #self.ui_messages.insert(tkinter.INSERT, "%s\n" % (msg))
-        #self.ui_messages.yview(tkinter.END)  # Auto-scrolling
         
         # Clean out input field for new data
         self.ui_input.delete("0.0", tkinter.END)
